@@ -5,7 +5,7 @@ namespace Kerogos\GlsPolska;
 use Illuminate\Support\ServiceProvider;
 use Kerogos\GlsPolska\Services\AdePlusClient;
 
-class lsPolskaServiceProvider extends ServiceProvider
+class GlsPolskaServiceProvider extends ServiceProvider
 {
 	public function register()
 	{

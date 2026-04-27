@@ -2,6 +2,7 @@
 
 namespace Kerogos\GlsPolska\Services;
 
+use Kerogos\GlsPolska\DTO\Consign;
 use Kerogos\GlsPolska\DTO\LabelResponse;
 use Kerogos\GlsPolska\DTO\Track;
 use Kerogos\GlsPolska\DTO\TrackEvent;
