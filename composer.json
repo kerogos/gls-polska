@@ -1,0 +1,44 @@
+{
+  "name": "kerogos/gls-polska",
+  "description": "GLS Polska ADE-Plus WebAPI2 SOAP client for Laravel 7",
+  "type": "library",
+  "version": "1.0.0",
+  "keywords": [
+    "laravel",
+    "gls-polska",
+    "gls",
+    "ade-plus",
+    "webapi2"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Kerogos\\GlsPolska\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.4",
+    "ext-soap": "*"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^5.0|^6.0|^7.0",
+    "barryvdh/laravel-ide-helper": ""
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Kerogos\\GlsPolska\\GlsPolskaServiceProvider"
+      ],
+      "aliases": {
+        "GlsPolska": "Kerogos\\GlsPolska\\Facades\\GlsPolska"
+      }
+    }
+  },
+  "authors": [
+    {
+      "name": "Konrad Gorczyca",
+      "email": "konrad@kerogos.pl",
+      "homepage": "https://kerogos.pl"
+    }
+  ],
+  "minimum-stability": "dev"
+}
