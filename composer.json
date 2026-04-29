@@ -20,8 +20,7 @@
     "ext-soap": "*"
   },
   "require-dev": {
-    "orchestra/testbench": "^5.0|^6.0|^7.0",
-    "barryvdh/laravel-ide-helper": ""
+    "orchestra/testbench": "^5.0|^6.0|^7.0"
   },
   "extra": {
     "laravel": {
