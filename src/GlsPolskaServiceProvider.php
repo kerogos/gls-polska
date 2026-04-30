@@ -7,19 +7,25 @@ use Kerogos\GlsPolska\Services\AdePlusClient;
 
 class GlsPolskaServiceProvider extends ServiceProvider
 {
-	public function register()
+	public function register(): void
 	{
-		$this->mergeConfigFrom(__DIR__.'/../config/gls-polska.php', 'gls-polska');
+		// Ładowanie configu pakietu
+		$this->mergeConfigFrom(
+			__DIR__ . '/../config/gls-polska.php',
+			'gls-polska'
+		);
 		
+		// Rejestracja klienta SOAP jako singleton
 		$this->app->singleton(AdePlusClient::class, function () {
 			return new AdePlusClient();
 		});
 	}
 	
-	public function boot()
+	public function boot(): void
 	{
+		// Publikacja configu
 		$this->publishes([
-			__DIR__.'/../config/gls-polska.php' => config_path('gls-polska.php'),
+			__DIR__ . '/../config/gls-polska.php' => config_path('gls-polska.php'),
 		], 'config');
 	}
 }
