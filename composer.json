@@ -15,6 +15,7 @@
       "Kerogos\\GlsPolska\\": "src/"
     }
   },
+  "license": "BSL-1.0",
   "require": {
     "php": ">=7.4",
     "ext-soap": "*"
