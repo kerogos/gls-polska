@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Kerogos\GlsPolska\Soap;
+
+class CLabelsArray
+{
+
+    /** @var cLabel[]|null */
+    public $items = null;
+}
