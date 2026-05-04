@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kerogos\GlsPolska\Services;
 
+use Kerogos\GlsPolska\Soap\AdePreparingBox_GetConsignLabelsExt;
 use SoapClient;
 use SoapFault;
 use Kerogos\GlsPolska\Exceptions\SoapFaultException;
@@ -18,8 +19,7 @@ use Kerogos\GlsPolska\Soap\CConsign;
 use Kerogos\GlsPolska\Soap\CLabels;
 use Kerogos\GlsPolska\Soap\CTrackID;
 
-class AdePlusClient
-{
+class AdePlusClient {
 	protected SoapClient $client;
 	protected ?string $sessionId = null;
 	
@@ -38,13 +38,23 @@ class AdePlusClient
 	
 	/**
 	 * Niskopoziomowe wywołanie SOAP
+	 * @throws SoapFaultException
 	 */
 	public function call(string $method, object $params)
 	{
 		try {
 			return $this->client->__soapCall($method, [$params]);
 		} catch (SoapFault $e) {
-			throw new SoapFaultException($e->getMessage(), (int)$e->getCode(), $e);
+			if (in_array($e->getCode(), ["err_sess_not_found", "err_sess_expired"])) {
+				$this->login();
+				$params->session = $this->sessionId;
+				try {
+					return $this->client->__soapCall($method, [$params]);
+				} catch (SoapFault $e) {
+					throw new SoapFaultException($e->getMessage(), (int)$e->getCode(), $e);
+				}
+			} else
+				throw new SoapFaultException($e->getMessage(), (int)$e->getCode(), $e);
 		}
 	}
 	
@@ -55,7 +65,7 @@ class AdePlusClient
 	public function login(): string
 	{
 		$req = new AdeLogin();
-		$req->user     = config('gls-polska.username');
+		$req->user = config('gls-polska.username');
 		$req->password = config('gls-polska.password');
 		
 		$res = $this->call('adeLogin', $req);
@@ -94,7 +104,7 @@ class AdePlusClient
 	// GET LABEL
 	// ------------------------------------------------------------------
 	
-	public function getLabel(string $parcelNumber): CLabels
+	public function getLabel(string $parcelNumber, $mode): CLabels
 	{
 		if ($this->sessionId === null) {
 			$this->login();
@@ -102,9 +112,32 @@ class AdePlusClient
 		
 		$req = new AdePickup_GetParcelLabel();
 		$req->session = $this->sessionId;
-		$req->number  = $parcelNumber;
+		$req->number = $parcelNumber;
+		$req->mode = $mode;
 		
 		$res = $this->call('adePickup_GetParcelLabel', $req);
+		
+		return $res->return;
+	}
+	
+	/**
+	 * @param string $parcelNumber
+	 * @param string $mode
+	 * @return CLabels[]|null
+	 * @throws SoapFaultException
+	 */
+	public function getLabelExt(string $parcelNumber, string $mode)
+	{
+		if ($this->sessionId === null) {
+			$this->login();
+		}
+		
+		$req = new AdePreparingBox_GetConsignLabelsExt();
+		$req->session = $this->sessionId;
+		$req->mode = $mode;
+		$req->id = $parcelNumber;
+		
+		$res = $this->call('adePickup_GetParcelLabelExt', $req);
 		
 		return $res->return;
 	}
@@ -121,7 +154,7 @@ class AdePlusClient
 		
 		$req = new AdeTrackID_Get();
 		$req->session = $this->sessionId;
-		$req->number  = $parcelNumber;
+		$req->number = $parcelNumber;
 		
 		$res = $this->call('adeTrackID_Get', $req);
 		
