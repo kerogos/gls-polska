@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Kerogos\GlsPolska\Services;
 
 use Kerogos\GlsPolska\Soap\AdePreparingBox_GetConsignLabelsExt;
+use Kerogos\GlsPolska\Soap\CLabelsArray;
 use SoapClient;
 use SoapFault;
 use Kerogos\GlsPolska\Exceptions\SoapFaultException;
@@ -65,8 +66,8 @@ class AdePlusClient {
 	public function login(): string
 	{
 		$req = new AdeLogin();
-		$req->user = config('gls-polska.username');
-		$req->password = config('gls-polska.password');
+		$req->user_name = config('gls-polska.username');
+		$req->user_password = config('gls-polska.password');
 		
 		$res = $this->call('adeLogin', $req);
 		
@@ -95,7 +96,7 @@ class AdePlusClient {
 		
 		$req = new AdePreparingBox_Insert();
 		$req->session = $this->sessionId;
-		$req->consign = $consign;
+		$req->consign_prep_data = $consign;
 		
 		return $this->call('adePreparingBox_Insert', $req);
 	}
@@ -123,7 +124,7 @@ class AdePlusClient {
 	/**
 	 * @param string $parcelNumber
 	 * @param string $mode
-	 * @return CLabels[]|null
+	 * @return CLabelsArray|null
 	 * @throws SoapFaultException
 	 */
 	public function getLabelExt(string $parcelNumber, string $mode)
@@ -137,7 +138,7 @@ class AdePlusClient {
 		$req->mode = $mode;
 		$req->id = $parcelNumber;
 		
-		$res = $this->call('adePickup_GetParcelLabelExt', $req);
+		$res = $this->call('adePreparingBox_GetConsignLabelsExt', $req);
 		
 		return $res->return;
 	}
