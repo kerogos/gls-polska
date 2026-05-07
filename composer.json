@@ -2,7 +2,7 @@
   "name": "kerogos/gls-polska",
   "description": "GLS Polska ADE-Plus WebAPI2 SOAP client for Laravel 7",
   "type": "library",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "keywords": [
     "laravel",
     "gls-polska",
