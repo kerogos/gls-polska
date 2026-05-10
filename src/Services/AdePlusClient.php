@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Kerogos\GlsPolska\Services;
 
 use Kerogos\GlsPolska\Soap\AdePickup_Create;
+use Kerogos\GlsPolska\Soap\AdePickup_GetIDs;
 use Kerogos\GlsPolska\Soap\AdePreparingBox_GetConsignLabelsExt;
 use Kerogos\GlsPolska\Soap\CConsignsIDsArray;
 use Kerogos\GlsPolska\Soap\CLabelsArray;
+use Kerogos\GlsPolska\Soap\CPickupsIDsArray;
 use SoapClient;
 use SoapFault;
 use Kerogos\GlsPolska\Exceptions\SoapFaultException;
@@ -167,7 +169,28 @@ class AdePlusClient {
 		
 		$res = $this->call('adePickup_Create', $req);
 		
-		return $res->return;
+		return $res->return->id;
+	}
+	
+	/**
+	 * @param int $start
+	 * @return int[]|null
+	 * @throws \Kerogos\GlsPolska\Exceptions\SoapFaultException
+	 */
+	public function getPickupIds(int $start) : array
+	{
+		if ($this->sessionId === null) {
+			$this->login();
+		}
+		
+		$req = new AdePickup_GetIDs();
+		$req->session = $this->sessionId;
+		$req->id_start = $start;
+		
+		/** @var \Kerogos\GlsPolska\Soap\AdePickup_GetIDsResponse $res */
+		$res = $this->call('adePickup_GetIDs', $req);
+		
+		return $res->return->items;
 	}
 	
 	// ------------------------------------------------------------------
