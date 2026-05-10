@@ -196,8 +196,9 @@ class AdePlusClient {
 	
 	/**
 	 * @param int $pickupId
-	 * @return CConsignBindIDs[] | null
+	 * @return CConsignBindIDs | CConsignBindIDs[] | null
 	 * @throws \Kerogos\GlsPolska\Exceptions\SoapFaultException
+	 * @noinspection PhpUndefinedClassInspection
 	 */
 	public function getConsignIdsFromPickup(int $pickupId) : array
 	{
