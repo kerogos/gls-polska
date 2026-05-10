@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Kerogos\GlsPolska\Services;
 
 use Kerogos\GlsPolska\Soap\AdePickup_Create;
+use Kerogos\GlsPolska\Soap\AdePickup_GetConsignBinds;
 use Kerogos\GlsPolska\Soap\AdePickup_GetIDs;
 use Kerogos\GlsPolska\Soap\AdePreparingBox_GetConsignLabelsExt;
 use Kerogos\GlsPolska\Soap\CConsignsIDsArray;
@@ -189,6 +190,27 @@ class AdePlusClient {
 		
 		/** @var \Kerogos\GlsPolska\Soap\AdePickup_GetIDsResponse $res */
 		$res = $this->call('adePickup_GetIDs', $req);
+		
+		return $res->return->items;
+	}
+	
+	/**
+	 * @param int $pickupId
+	 * @return CConsignBindIDs[] | null
+	 * @throws \Kerogos\GlsPolska\Exceptions\SoapFaultException
+	 */
+	public function getConsignIdsFromPickup(int $pickupId) : array
+	{
+		if ($this->sessionId === null) {
+			$this->login();
+		}
+		
+		$req = new AdePickup_GetConsignBinds();
+		$req->session = $this->sessionId;
+		$req->id = $pickupId;
+		
+		/** @var \Kerogos\GlsPolska\Soap\AdePickup_GetConsignBindsResponse$res */
+		$res = $this->call('adePickup_GetConsignBinds', $req);
 		
 		return $res->return->items;
 	}
