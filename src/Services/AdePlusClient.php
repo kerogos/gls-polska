@@ -196,11 +196,11 @@ class AdePlusClient {
 	
 	/**
 	 * @param int $pickupId
-	 * @return CConsignBindIDs | CConsignBindIDs[] | null
+	 * @return CConsignBindIDs[]
 	 * @throws \Kerogos\GlsPolska\Exceptions\SoapFaultException
 	 * @noinspection PhpUndefinedClassInspection
 	 */
-	public function getConsignIdsFromPickup(int $pickupId) : array
+	public function getConsignIdsFromPickup(int $pickupId): array
 	{
 		if ($this->sessionId === null) {
 			$this->login();
@@ -213,7 +213,7 @@ class AdePlusClient {
 		/** @var \Kerogos\GlsPolska\Soap\AdePickup_GetConsignBindsResponse$res */
 		$res = $this->call('adePickup_GetConsignBinds', $req);
 		
-		return $res->return->items;
+		return Arr::wrap($res->return->items);
 	}
 	
 	// ------------------------------------------------------------------
