@@ -31,6 +31,8 @@ class AdePlusClient {
 	protected SoapClient $client;
 	protected ?string $sessionId = null;
 	
+	protected SoapNormalizer $normalizer;
+	
 	public function __construct()
 	{
 		$this->client = new SoapClient(
@@ -42,6 +44,7 @@ class AdePlusClient {
 				'classmap'   => Classmap::get(),
 			]
 		);
+		$this->normalizer = new SoapNormalizer();
 	}
 	
 	/**
@@ -51,18 +54,23 @@ class AdePlusClient {
 	public function call(string $method, object $params)
 	{
 		try {
-			return $this->client->__soapCall($method, [$params]);
+			$res = $this->client->__soapCall($method, [$params]);
+			
+			return $this->normalizer->normalize($res);
 		} catch (SoapFault $e) {
 			if (in_array($e->faultcode, ["err_sess_not_found", "err_sess_expired"])) {
 				$this->login();
 				$params->session = $this->sessionId;
 				try {
-					return $this->client->__soapCall($method, [$params]);
+					$res = $this->client->__soapCall($method, [$params]);
+					
+					return $this->normalizer->normalize($res);
+					
 				} catch (SoapFault $e) {
-					throw new SoapFaultException($e->faultstring, $e->faultcode, $e);
-				}
+					throw SoapFaultException::fromSoapFault($e);
+									}
 			} else
-				throw new SoapFaultException($e->faultstring, $e->faultcode, $e);
+				throw SoapFaultException::fromSoapFault($e);
 		}
 	}
 	
