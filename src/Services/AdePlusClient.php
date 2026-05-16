@@ -7,7 +7,9 @@ namespace Kerogos\GlsPolska\Services;
 use Kerogos\GlsPolska\Soap\AdePickup_Create;
 use Kerogos\GlsPolska\Soap\AdePickup_GetConsignBinds;
 use Kerogos\GlsPolska\Soap\AdePickup_GetIDs;
+use Kerogos\GlsPolska\Soap\AdePreparingBox_GetConsign;
 use Kerogos\GlsPolska\Soap\AdePreparingBox_GetConsignLabelsExt;
+use Kerogos\GlsPolska\Soap\AdePreparingBox_GetConsignResponse;
 use Kerogos\GlsPolska\Soap\CConsignsIDsArray;
 use Kerogos\GlsPolska\Soap\CLabelsArray;
 use Kerogos\GlsPolska\Soap\CPickupsIDsArray;
@@ -51,16 +53,16 @@ class AdePlusClient {
 		try {
 			return $this->client->__soapCall($method, [$params]);
 		} catch (SoapFault $e) {
-			if (in_array($e->getCode(), ["err_sess_not_found", "err_sess_expired"])) {
+			if (in_array($e->faultcode, ["err_sess_not_found", "err_sess_expired"])) {
 				$this->login();
 				$params->session = $this->sessionId;
 				try {
 					return $this->client->__soapCall($method, [$params]);
 				} catch (SoapFault $e) {
-					throw new SoapFaultException($e->getMessage(), (int)$e->getCode(), $e);
+					throw new SoapFaultException($e->faultstring, $e->faultcode, $e);
 				}
 			} else
-				throw new SoapFaultException($e->getMessage(), (int)$e->getCode(), $e);
+				throw new SoapFaultException($e->faultstring, $e->faultcode, $e);
 		}
 	}
 	
@@ -104,6 +106,20 @@ class AdePlusClient {
 		$req->consign_prep_data = $consign;
 		
 		return $this->call('adePreparingBox_Insert', $req);
+	}
+	
+	public function getConsignById(int $id): AdePreparingBox_GetConsignResponse
+	{
+		if ($this->sessionId === null) {
+			$this->login();
+		}
+		
+		$req = new AdePreparingBox_GetConsign();
+		$req->session = $this->sessionId;
+		$req->id = $id;
+		
+		return $this->call('adePreparingBox_GetConsign', $req);
+		
 	}
 	
 	// ------------------------------------------------------------------
