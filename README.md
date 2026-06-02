@@ -28,13 +28,21 @@ GLS_ADE_PASSWORD=hasło_do_api
 GLS_ADE_SANDBOX przyjmuje wartość true, jeżeli ma być podłączenie do testowego API, jeżeli false to do produkcyjnego. Domyślnie jest false.
 
 ### Użycie
+#### API ADEPlus
+```php
+use Kerogos\GlsPolska;
+/*(...)*/
+$api = new Kerogos\GlsPolska\Services\AdeTTClient();
+$response = $api->getTrace('TRACKING_NO');
+```
+W przypadku klas wymagających uwierzytelnienia (wypełnienia struktury AuthData), można to pominąć.
+#### API Track&Trace
 ```php
 use Kerogos\GlsPolska;
 /*(...)*/
 $api = new Kerogos\GlsPolska\Services\AdePlusClient();
 $response = $api->login();
 ```
-W przypadku klas wymagających uwierzytelnienia (wypełnienia struktury AuthData), można to pominąć.
 
 ### Licencja
 Pakiet jest na licencji Boost Software License - Version 1.0
