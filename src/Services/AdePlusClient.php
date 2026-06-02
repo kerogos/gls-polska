@@ -36,9 +36,9 @@ class AdePlusClient {
 	public function __construct()
 	{
 		$this->client = new SoapClient(
-			config('gls-polska.wsdl'),
+			config('gls-polska.soap.wsdl'),
 			[
-				'trace'      => config('gls-polska.trace', true),
+				'trace'      => config('gls-polska.soap.trace', true),
 				'exceptions' => true,
 				'cache_wsdl' => WSDL_CACHE_MEMORY,
 				'classmap'   => Classmap::get(),
@@ -81,8 +81,8 @@ class AdePlusClient {
 	public function login(): string
 	{
 		$req = new AdeLogin();
-		$req->user_name = config('gls-polska.username');
-		$req->user_password = config('gls-polska.password');
+		$req->user_name = config('gls-polska.soap.username');
+		$req->user_password = config('gls-polska.soap.password');
 		
 		$res = $this->call('adeLogin', $req);
 		
@@ -92,7 +92,7 @@ class AdePlusClient {
 	public function loginByLocalizationCode(): string
 	{
 		$req = new AdeLoginByLocalizationCode();
-		$req->localizationCode = config('gls-polska.localization_code');
+		$req->localizationCode = config('gls-polska.soap.localization_code');
 		
 		$res = $this->call('adeLoginByLocalizationCode', $req);
 		

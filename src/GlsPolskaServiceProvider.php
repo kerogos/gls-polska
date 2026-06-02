@@ -4,6 +4,7 @@ namespace Kerogos\GlsPolska;
 
 use Illuminate\Support\ServiceProvider;
 use Kerogos\GlsPolska\Services\AdePlusClient;
+use Kerogos\GlsPolska\Services\AdeTTClient;
 
 class GlsPolskaServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,9 @@ class GlsPolskaServiceProvider extends ServiceProvider
 		// Rejestracja klienta SOAP jako singleton
 		$this->app->singleton(AdePlusClient::class, function () {
 			return new AdePlusClient();
+		});
+		$this->app->singleton(AdeTTClient::class, function () {
+			return new AdeTTClient();
 		});
 	}
 	
