@@ -16,7 +16,7 @@ class AdeTTClient {
 	
 	public function getTracing(string $trackingNumber)
 	{
-		$response = Http::witjAuth($this->username, $this->password)->get($this->url . "/tracking/references/$trackingNumber");
+		$response = Http::withBasicAuth($this->username, $this->password)->get($this->url . "/tracking/references/$trackingNumber");
 		$response->throw();
 		return $response->json();
 	}
