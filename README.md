@@ -1,10 +1,10 @@
-# dhl-polska
+# gls-polska
 [![GitHub version](https://img.shields.io/badge/version-1.0.0-lightgrey)]()
 [![GitHub license](https://img.shields.io/github/license/kerogos/gls-polska)](https://github.com/kerogos/gls-polska/blob/master/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/kerogos/gls-polska)](https://github.com/kerogos/gls-polska/issues)
 
-[język polski](https://github.com/kerogos/dhl-polska#polski)
-[english](https://github.com/kerogos/dhl-polska#english)
+[język polski](https://github.com/kerogos/gls-polska#polski)
+[english](https://github.com/kerogos/gls-polska#english)
 ## polski
 ### Opis
 Pakiet jest wraperem do Laravela do obsługi ADE-Plus WebAPI 2 z GLS [dokumentacja metod](https://adeplus.gls-poland.com/adeplus/pm1/manuals/webapi2_pl/index.htm).
@@ -17,7 +17,7 @@ composer require kerogos/gls-polska
 ```
 Należy następnie skopiować plik konfiguracyjny wykonując następującą metodę
 ```shell
-php artisan vendor:publish --provider=kerogos/dhl-polska/GlsPolskaServiceProvider --tag=config
+php artisan vendor:publish --provider=kerogos/gls-polska/GlsPolskaServiceProvider --tag=config
 ```
 w pliku .env należy wypełnić następujące pola
 ```text
@@ -28,13 +28,21 @@ GLS_ADE_PASSWORD=hasło_do_api
 GLS_ADE_SANDBOX przyjmuje wartość true, jeżeli ma być podłączenie do testowego API, jeżeli false to do produkcyjnego. Domyślnie jest false.
 
 ### Użycie
+#### API ADEPlus
+```php
+use Kerogos\GlsPolska;
+/*(...)*/
+$api = new Kerogos\GlsPolska\Services\AdeTTClient();
+$response = $api->getTrace('TRACKING_NO');
+```
+W przypadku klas wymagających uwierzytelnienia (wypełnienia struktury AuthData), można to pominąć.
+#### API Track&Trace
 ```php
 use Kerogos\GlsPolska;
 /*(...)*/
 $api = new Kerogos\GlsPolska\Services\AdePlusClient();
 $response = $api->login();
 ```
-W przypadku klas wymagających uwierzytelnienia (wypełnienia struktury AuthData), można to pominąć.
 
 ### Licencja
 Pakiet jest na licencji Boost Software License - Version 1.0
