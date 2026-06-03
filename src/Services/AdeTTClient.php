@@ -10,8 +10,8 @@ class AdeTTClient {
 	protected $password = "";
 	public function __construct()
 	{
-		$this->username = config('gls-polska.tt.username');
-		$this->password = config('gls-polska.tt.password');
+		$this->username = config('gls-polska.rest.username');
+		$this->password = config('gls-polska.rest.password');
 	}
 	
 	public function getTracing(string $trackingNumber)
