@@ -18,6 +18,6 @@ class AdeTTClient {
 	{
 		$response = Http::withBasicAuth($this->username, $this->password)->get($this->url . "/tracking/references/$trackingNumber");
 		$response->throw();
-		return $response->json();
+		return $response->object();
 	}
 }
